@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>教學頁面</title>
     <style>
+        html {
+            font-size: 16px; /* 預設字體大小 */
+        }
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px; /* 小屏幕字體大小 */
+            }
+        }
+        @media (max-width: 480px) {
+            html {
+                font-size: 12px; /* 更小屏幕字體大小 */
+            }
+        }
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -60,7 +73,7 @@
         .section button, .hiragana-list-section button {
             margin-top: 1em;
             padding: 0.3em 0.6em;
-            font-size: 1em;
+            font-size: 1em; /* 使用相對單位 */
             cursor: pointer;
         }
         .hiragana-list {
@@ -70,8 +83,8 @@
             justify-items: center; /* 水平居中 */
         }
         .hiragana-list button {
-            width: 60px; /* 固定寬度 */
-            height: 60px; /* 固定高度 */
+            width: 3.75rem; /* 60px = 3.75rem */
+            height: 3.75rem; /* 60px = 3.75rem */
             font-size: 1.5em;
             cursor: pointer;
             box-sizing: border-box;
@@ -87,8 +100,8 @@
         }
         /* 平假名圖片播放鍵 */
         .image-play-button {
-            width: 80px; /* 调整按钮宽度 */
-            height: 80px; /* 调整按钮高度 */
+            width: 5rem; /* 80px = 5rem */
+            height: 5rem; /* 80px = 5rem */
             padding: 0; /* 移除内边距 */
             background: none; /* 移除默认背景 */
             border: none; /* 移除默认边框 */
@@ -100,8 +113,8 @@
 
         /* 平假名筆劃GIF播放鍵 */
         .gif-play-button {
-            width: 90px; /* 调整按钮宽度 */
-            height: 90px; /* 调整按钮高度 */
+            width: 5.625rem; /* 90px = 5.625rem */
+            height: 5.625rem; /* 90px = 5.625rem */
             padding: 0; /* 移除内边距 */
             background: none; /* 移除默认背景 */
             border: none; /* 移除默认边框 */
@@ -113,8 +126,8 @@
 
         /* 平假名聯想圖片播放鍵 */
         .mnemonic-play-button {
-            width: 100px; /* 调整按钮宽度 */
-            height: 100px; /* 调整按钮高度 */
+            width: 6.25rem; /* 100px = 6.25rem */
+            height: 6.25rem; /* 100px = 6.25rem */
             padding: 0; /* 移除内边距 */
             background: none; /* 移除默认背景 */
             border: none; /* 移除默认边框 */
@@ -132,8 +145,8 @@
             transition: transform 0.1s;
         }
         .start-button {
-            width: 150px; /* 增加寬度 */
-            height: 50px; /* 增加高度 */
+            width: 9.375rem; /* 150px = 9.375rem */
+            height: 3.125rem; /* 50px = 3.125rem */
             padding: 0;
             background: #ffcc00; /* 背景色變為黃色 */
             border: 2px solid #cc9900; /* 邊框色變為深黃色 */
@@ -142,16 +155,16 @@
             border-radius: 8px; /* 圓角 */
             font-size: 1.2em; /* 調整字體大小 */
             position: absolute; /* 絕對定位 */
-            top: calc(50% + 100px); /* 與其他播放鍵對齊 */
+            top: calc(50% + 6.25rem); /* 與其他播放鍵對齊 */
             left: 50%;
             transform: translateX(-50%);
         }
         @media (max-width: 768px) {
             .start-button {
-                width: 100px; /* 減小寬度 */
-                height: 40px; /* 減小高度 */
+                width: 6.25rem; /* 100px = 6.25rem */
+                height: 2.5rem; /* 40px = 2.5rem */
                 font-size: 1em; /* 調整字體大小 */
-                top: calc(50% + 50px); /* 調整絕對定位的位置 */
+                top: calc(50% + 3.125rem); /* 調整絕對定位的位置 */
             }
         }
     </style>
