@@ -32,7 +32,7 @@
         }
         main {
             display: flex;
-            flex-direction: column; /* 默認為縱向排列 */
+            flex-direction: row; /* 始終保持橫向排列 */
             width: 90%;
             max-width: 1200px;
             margin: 1em 0;
@@ -122,14 +122,14 @@
             font-size: 1.2em;
             margin-top: 1em; /* 與其他內容保持間隔 */
         }
-        /* 媒體查詢：大於768px寬度的設備 */
-        @media (min-width: 768px) {
+        /* 媒體查詢：小於768px寬度的設備 */
+        @media (max-width: 768px) {
             main {
-                flex-direction: row;
+                flex-direction: row; /* 始終保持橫向排列 */
+                flex-wrap: wrap; /* 在小屏幕上允許內容換行 */
             }
-            .hiragana-list {
-                flex-direction: row;
-                gap: 0.2em;
+            .section, .hiragana-list-section {
+                flex: 1 1 100%; /* 每個區塊佔據一行 */
             }
         }
     </style>
