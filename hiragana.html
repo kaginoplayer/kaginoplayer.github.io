@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>平假名學習軟體</title>
     <style>
+        html {
+            font-size: 16px; /* 預設字體大小 */
+        }
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px; /* 小屏幕字體大小 */
+            }
+        }
+        @media (max-width: 480px) {
+            html {
+                font-size: 12px; /* 更小屏幕字體大小 */
+            }
+        }
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -32,21 +45,37 @@
         }
         main {
             display: flex;
-            flex-direction: column;
             width: 90%;
             max-width: 1200px;
             margin: 1em 0;
             gap: 0.5em;
+            flex-direction: row; /* 始終保持橫向排列 */
         }
-        .section, .hiragana-list-section {
+        @media (max-width: 768px) {
+            main {
+                flex-direction: column; /* 小屏幕上改為縱向排列 */
+                align-items: center; /* 水平居中對齊 */
+            }
+        }
+        .section {
+            flex: 1;
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             padding: 1em;
             text-align: center;
+            width: 100%; /* 確保寬度為100% */
+            max-width: 350px; /* 設定一個最大寬度 */
         }
         .hiragana-list-section {
             flex: 1.2; /* 放大1.2倍 */
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 1em;
+            text-align: center;
+            width: 100%; /* 確保寬度為100% */
+            max-width: 400px; /* 設定一個最大寬度 */
         }
         .section img {
             max-width: 100%;
@@ -59,18 +88,24 @@
         }
         .hiragana-list {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 預設三行 */
+            grid-template-columns: repeat(7, 1fr); /* 每行最多七個字 */
             gap: 0.2em; /* 縮小按鍵間隔 */
         }
+        @media (max-width: 768px) {
+            .hiragana-list {
+                grid-template-columns: repeat(4, 1fr); /* 小屏幕上每行最多四個字 */
+            }
+        }
         .hiragana-list button {
-            width: calc(100% * 0.85); /* 設定寬度為原來的0.85倍 */
-            height: calc(100% * 0.85); /* 設定高度為原來的0.85倍，保持正方形 */
+            width: 100%;
+            padding: 0.8em;
             font-size: 0.9em;
             cursor: pointer;
             box-sizing: border-box;
             background-color: #f0f0f0;
             border: 1px solid #ccc;
             transition: background-color 0.3s;
+            margin: 0; /* 移除上下間隔 */
         }
         .hiragana-list button.clicked {
             background-color: #d0d0d0; /* 更明顯的顏色變化 */
@@ -80,41 +115,39 @@
         }
         /* 平假名圖片播放鍵 */
         .image-play-button {
-            width: 80px; /* 调整按钮宽度 */
-            height: 80px; /* 调整按钮高度 */
-            padding: 0; /* 移除内边距 */
-            background: none; /* 移除默认背景 */
-            border: none; /* 移除默认边框 */
+            width: 5rem; /* 使用相對單位 */
+            height: 5rem; /* 使用相對單位 */
+            padding: 0;
+            background: none;
+            border: none;
         }
         .image-icon {
-            width: 100%; /* 图片宽度设置为按钮宽度的100% */
-            height: auto; /* 自动调整高度以保持比例 */
+            width: 100%;
+            height: auto;
         }
-
         /* 平假名筆劃GIF播放鍵 */
         .gif-play-button {
-            width: 90px; /* 调整按钮宽度 */
-            height: 90px; /* 调整按钮高度 */
-            padding: 0; /* 移除内边距 */
-            background: none; /* 移除默认背景 */
-            border: none; /* 移除默认边框 */
+            width: 5.625rem; /* 使用相對單位 */
+            height: 5.625rem; /* 使用相對單位 */
+            padding: 0;
+            background: none;
+            border: none;
         }
         .gif-icon {
-            width: 100%; /* 图片宽度设置为按钮宽度的100% */
-            height: auto; /* 自动调整高度以保持比例 */
+            width: 100%;
+            height: auto;
         }
-
         /* 平假名聯想圖片播放鍵 */
         .mnemonic-play-button {
-            width: 100px; /* 调整按钮宽度 */
-            height: 100px; /* 调整按钮高度 */
-            padding: 0; /* 移除内边距 */
-            background: none; /* 移除默认背景 */
-            border: none; /* 移除默认边框 */
+            width: 6.25rem; /* 使用相對單位 */
+            height: 6.25rem; /* 使用相對單位 */
+            padding: 0;
+            background: none;
+            border: none;
         }
         .mnemonic-icon {
-            width: 100%; /* 图片宽度设置为按钮宽度的100% */
-            height: auto; /* 自动调整高度以保持比例 */
+            width: 100%;
+            height: auto;
         }
         .disabled {
             cursor: not-allowed;
@@ -124,23 +157,14 @@
             transform: scale(0.95);
             transition: transform 0.1s;
         }
-        @media (min-width: 600px) {
-            main {
-                flex-direction: row;
-            }
-            .hiragana-list {
-                grid-template-columns: repeat(7, 1fr); /* 確保每行最多七個字 */
-            }
-        }
     </style>
 </head>
 <body>
     <header>
-        
+        <!-- Header content -->
     </header>
     <main>
         <div class="section">
-           
             <img id="hiragana-image" src="assets/blank.png" alt="Hiragana Image">
             <button class="image-play-button button-press-effect disabled" id="imagePlayButton" onclick="playImage()" disabled>
                 <img src="assets/sound-icon.png" alt="Play" class="image-icon">
@@ -148,14 +172,12 @@
             <audio id="hiragana-sound" src=""></audio>
         </div>
         <div class="section">
-           
             <img id="stroke-order-gif" src="assets/blank.png" alt="Stroke Order GIF">
             <button class="gif-play-button button-press-effect disabled" id="gifPlayButton" onclick="playGif()" disabled>
                 <img src="assets/play-icon.png" alt="Play" class="gif-icon">
             </button>
         </div>
         <div class="section">
-           
             <img id="mnemonic-image" src="assets/blank.png" alt="Mnemonic Image">
             <button class="mnemonic-play-button button-press-effect disabled" id="mnemonicPlayButton" onclick="playMnemonic()" disabled>
                 <img src="assets/brain-icon.png" alt="Play" class="mnemonic-icon">
@@ -163,91 +185,78 @@
             <audio id="mnemonic-sound" src=""></audio>
         </div>
         <div class="hiragana-list-section">
-            
             <div class="hiragana-list">
-                <!-- 第一排 -->
+                <!-- Hiragana buttons -->
                 <button onclick="updateContent('no')">の</button>
                 <button onclick="updateContent('se')">せ</button>
                 <button onclick="updateContent('mo')">も</button>
                 <button onclick="updateContent('ke')">け</button>
                 <button onclick="updateContent('yu')">ゆ</button>
                 <button onclick="updateContent('ya')">や</button>
-                <button class="empty"></button> <!-- 添加空按鈕保留空間 -->
-                <!-- 第二排 -->
+                <button class="empty"></button>
                 <button onclick="updateContent('ho')">ほ</button>
                 <button onclick="updateContent('i')">い</button>
                 <button onclick="updateContent('nu')">ぬ</button>
                 <button onclick="updateContent('ma')">ま</button>
                 <button onclick="updateContent('na')">な</button>
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
-                <button class="empty"></button> <!-- 添加空按鈕保留空間 -->
-                <!-- 第三排 -->
+                <button class="empty"></button>
+                <button class="empty"></button>
                 <button onclick="updateContent('ri')">り</button>
                 <button onclick="updateContent('me')">め</button>
                 <button onclick="updateContent('sa')">さ</button>
-                <button class="empty"></button> <!-- 故意留空 -->
+                <button class="empty"></button>
                 <button onclick="updateContent('su')">す</button>
                 <button onclick="updateContent('so')">そ</button>
-                <button class="empty"></button> <!-- 添加空按鈕保留空間 -->
-                <!-- 第四排 -->
+                <button class="empty"></button>
                 <button onclick="updateContent('u')">う</button>
-                <button class="empty"></button> <!-- 故意留空 -->
+                <button class="empty"></button>
                 <button onclick="updateContent('fu')">ふ</button>
                 <button onclick="updateContent('ra')">ら</button>
-                <button class="empty"></button> <!-- 故意留空 -->
+                <button class="empty"></button>
                 <button onclick="updateContent('shi')">し</button>
                 <button onclick="updateContent('hi')">ひ</button>
-               
-                <!-- 第五排 -->
                 <button onclick="updateContent('ni')">に</button>
                 <button onclick="updateContent('tsu')">つ</button>
                 <button onclick="updateContent('to')">と</button>
                 <button onclick="updateContent('ku')">く</button>
                 <button onclick="updateContent('wo')">を</button>
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
-                <!-- 第六排 -->
+                <button class="empty"></button>
+                <button class="empty"></button>
                 <button onclick="updateContent('ka')">か</button>
                 <button onclick="updateContent('o')">お</button>
                 <button onclick="updateContent('ki')">き</button>
                 <button onclick="updateContent('e')">え</button>
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
-                <!-- 第七排 -->
+                <button class="empty"></button>
+                <button class="empty"></button>
+                <button class="empty"></button>
                 <button onclick="updateContent('ta')">た</button>
                 <button onclick="updateContent('ko')">こ</button>
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
+                <button class="empty"></button>
                 <button onclick="updateContent('ha')">は</button>
                 <button onclick="updateContent('yo')">よ</button>
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
+                <button class="empty"></button>
                 <button onclick="updateContent('a')">あ</button>
-                <!-- 第八排 -->
                 <button onclick="updateContent('mi')">み</button>
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
+                <button class="empty"></button>
                 <button onclick="updateContent('ru')">る</button>
                 <button onclick="updateContent('ro')">ろ</button>
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
-                <!-- 第九排 -->
+                <button class="empty"></button>
+                <button class="empty"></button>
+                <button class="empty"></button>
                 <button onclick="updateContent('wa')">わ</button>
                 <button onclick="updateContent('ne')">ね</button>
                 <button onclick="updateContent('re')">れ</button>
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
+                <button class="empty"></button>
+                <button class="empty"></button>
+                <button class="empty"></button>
                 <button onclick="updateContent('mu')">む</button>
-             
-                <!-- 第十排 -->
                 <button onclick="updateContent('he')">へ</button>
                 <button onclick="updateContent('chi')">ち</button>
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
-                <button class="empty"></button> <!-- 空按鈕保留空間 -->
+                <button class="empty"></button>
+                <button class="empty"></button>
+                <button class="empty"></button>
                 <button onclick="updateContent('te')">て</button>
                 <button onclick="updateContent('n')">ん</button>
-              
             </div>
         </div>
     </main>
