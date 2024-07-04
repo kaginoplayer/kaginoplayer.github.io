@@ -32,7 +32,6 @@
         }
         main {
             display: flex;
-            flex-direction: row; /* 始終保持橫向排列 */
             width: 90%;
             max-width: 1200px;
             margin: 1em 0;
@@ -47,17 +46,13 @@
             text-align: center;
         }
         .hiragana-list-section {
-            flex: 1.2;
+            flex: 1.2; /* 放大1.2倍 */
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             padding: 1em;
             text-align: center;
             position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
         }
         .section img {
             max-width: 100%;
@@ -69,15 +64,14 @@
             cursor: pointer;
         }
         .hiragana-list {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.2em;
+            display: grid;
+            grid-template-columns: repeat(1, 1fr); /* 確保每行一個字 */
+            gap: 0.2em; /* 縮小按鍵間隔 */
+            justify-items: center; /* 水平居中 */
         }
         .hiragana-list button {
-            width: 60px;
-            height: 60px;
+            width: 60px; /* 固定寬度 */
+            height: 60px; /* 固定高度 */
             font-size: 1.5em;
             cursor: pointer;
             box-sizing: border-box;
@@ -86,21 +80,48 @@
             transition: background-color 0.3s;
         }
         .hiragana-list button.clicked {
-            background-color: #d0d0d0;
+            background-color: #d0d0d0; /* 更明顯的顏色變化 */
         }
         .hiragana-list .empty {
-            visibility: hidden;
+            visibility: hidden; /* 隱藏但保留空間 */
         }
-        .image-play-button, .gif-play-button, .mnemonic-play-button {
-            width: 80px;
-            height: 80px;
-            padding: 0;
-            background: none;
-            border: none;
+        /* 平假名圖片播放鍵 */
+        .image-play-button {
+            width: 80px; /* 调整按钮宽度 */
+            height: 80px; /* 调整按钮高度 */
+            padding: 0; /* 移除内边距 */
+            background: none; /* 移除默认背景 */
+            border: none; /* 移除默认边框 */
         }
-        .image-icon, .gif-icon, .mnemonic-icon {
-            width: 100%;
-            height: auto;
+        .image-icon {
+            width: 100%; /* 图片宽度设置为按钮宽度的100% */
+            height: auto; /* 自动调整高度以保持比例 */
+        }
+
+        /* 平假名筆劃GIF播放鍵 */
+        .gif-play-button {
+            width: 90px; /* 调整按钮宽度 */
+            height: 90px; /* 调整按钮高度 */
+            padding: 0; /* 移除内边距 */
+            background: none; /* 移除默认背景 */
+            border: none; /* 移除默认边框 */
+        }
+        .gif-icon {
+            width: 100%; /* 图片宽度设置为按钮宽度的100% */
+            height: auto; /* 自动调整高度以保持比例 */
+        }
+
+        /* 平假名聯想圖片播放鍵 */
+        .mnemonic-play-button {
+            width: 100px; /* 调整按钮宽度 */
+            height: 100px; /* 调整按钮高度 */
+            padding: 0; /* 移除内边距 */
+            background: none; /* 移除默认背景 */
+            border: none; /* 移除默认边框 */
+        }
+        .mnemonic-icon {
+            width: 100%; /* 图片宽度设置为按钮宽度的100% */
+            height: auto; /* 自动调整高度以保持比例 */
         }
         .disabled {
             cursor: not-allowed;
@@ -111,26 +132,27 @@
             transition: transform 0.1s;
         }
         .start-button {
-            width: 150px;
-            height: 50px;
+            width: 150px; /* 增加寬度 */
+            height: 50px; /* 增加高度 */
             padding: 0;
-            background: #ffcc00;
-            border: 2px solid #cc9900;
-            color: #333;
+            background: #ffcc00; /* 背景色變為黃色 */
+            border: 2px solid #cc9900; /* 邊框色變為深黃色 */
+            color: #333; /* 字體顏色變為深色 */
             cursor: pointer;
-            border-radius: 8px;
-            font-size: 1.2em;
-            margin-top: 1em; /* 與其他內容保持間隔 */
+            border-radius: 8px; /* 圓角 */
+            font-size: 1.2em; /* 調整字體大小 */
+            transition: background-color 0.3s, transform 0.1s ease;
+            position: absolute; /* 絕對定位 */
+            top: calc(50% + 100px); /* 與其他播放鍵對齊 */
+            left: 50%;
+            transform: translateX(-50%);
         }
-        /* 媒體查詢：小於768px寬度的設備 */
-        @media (max-width: 768px) {
-            main {
-                flex-direction: row; /* 始終保持橫向排列 */
-                flex-wrap: wrap; /* 在小屏幕上允許內容換行 */
-            }
-            .section, .hiragana-list-section {
-                flex: 1 1 100%; /* 每個區塊佔據一行 */
-            }
+        .start-button:hover {
+            background-color: #ffdb4d; /* 滑鼠移上時的顏色 */
+        }
+        .start-button:active {
+            background-color: #ffcc00; /* 按下時的顏色 */
+            transform: scale(0.95); /* 按下時的縮小效果 */
         }
     </style>
 </head>
@@ -165,11 +187,12 @@
         <div class="hiragana-list-section">
             <h2>①點選字母</h2>
             <div class="hiragana-list">
+                <!-- 只保留の鍵 -->
                 <button onclick="updateContent('no')">の</button>
             </div>
+            <!-- 新增的開始學習按鈕 -->
             <a href="hiragana.html">
-                <button class="start-button">開始正式學習</button>
-            </a>
+            <button class="start-button button-press-effect" onclick="startLearning()">開始正式學習</button>
         </div>
     </main>
     <footer>
@@ -235,6 +258,10 @@
             const sound = document.getElementById('mnemonic-sound');
             sound.currentTime = 0;
             sound.play();
+        }
+
+        function startLearning() {
+            alert('開始學習平假名！');
         }
     </script>
 </body>
