@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>教學</title>
+    <title>教學頁面</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -202,14 +202,14 @@
 
         function updateContent(hiragana) {
             currentHiragana = hiragana;
-            document.getElementById('hiragana-image').src = assets/${hiragana}-image.png;
-            document.getElementById('hiragana-sound').src = assets/${hiragana}-ex.wav;
-            document.getElementById('stroke-order-gif').src = assets/blank.png;
-            document.getElementById('mnemonic-image').src = assets/blank.png;
-            document.getElementById('mnemonic-sound').src = assets/${hiragana}-mnemonic.mp3;
+            document.getElementById('hiragana-image').src = `assets/${hiragana}-image.png`;
+            document.getElementById('hiragana-sound').src = `assets/${hiragana}-ex.wav`;
+            document.getElementById('stroke-order-gif').src = `assets/blank.png`;
+            document.getElementById('mnemonic-image').src = `assets/blank.png`;
+            document.getElementById('mnemonic-sound').src = `assets/${hiragana}-mnemonic.mp3`;
 
             // 設定被點擊的按鍵樣式
-            document.querySelector(.hiragana-list button[onclick="updateContent('${hiragana}')"]).classList.add('clicked');
+            document.querySelector(`.hiragana-list button[onclick="updateContent('${hiragana}')"]`).classList.add('clicked');
             
             // 啟用播放鍵
             document.getElementById('imagePlayButton').classList.remove('disabled');
@@ -233,7 +233,7 @@
 
         function playGif() {
             if (currentHiragana === '') return;
-            const gif = assets/${currentHiragana}-gif.gif;
+            const gif = `assets/${currentHiragana}-gif.gif`;
             const img = document.getElementById('stroke-order-gif');
             img.src = gif;
             const duration = gifDurations[currentHiragana] || 3000; // 默認為 3 秒
@@ -241,12 +241,12 @@
         }
 
         function handleGifEnd() {
-            document.getElementById('stroke-order-gif').src = assets/${currentHiragana}-image.png;
+            document.getElementById('stroke-order-gif').src = `assets/${currentHiragana}-image.png`;
         }
 
         function playMnemonic() {
             if (currentHiragana === '') return;
-            const mnemonic = assets/${currentHiragana}-mnemonic.png;
+            const mnemonic = `assets/${currentHiragana}-mnemonic.png`;
             document.getElementById('mnemonic-image').src = mnemonic;
             const sound = document.getElementById('mnemonic-sound');
             sound.currentTime = 0;
