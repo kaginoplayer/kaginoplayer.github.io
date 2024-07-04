@@ -5,19 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>平假名學習軟體</title>
     <style>
-        html {
-            font-size: 16px; /* 預設字體大小 */
-        }
-        @media (max-width: 768px) {
-            html {
-                font-size: 14px; /* 小屏幕字體大小 */
-            }
-        }
-        @media (max-width: 480px) {
-            html {
-                font-size: 12px; /* 更小屏幕字體大小 */
-            }
-        }
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -51,12 +38,6 @@
             gap: 0.5em;
             flex-direction: row; /* 始終保持橫向排列 */
         }
-        @media (max-width: 768px) {
-            main {
-                flex-direction: column; /* 小屏幕上改為縱向排列 */
-                align-items: center; /* 水平居中對齊 */
-            }
-        }
         .section {
             flex: 1;
             background-color: #ffffff;
@@ -64,8 +45,6 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             padding: 1em;
             text-align: center;
-            width: 100%; /* 確保寬度為100% */
-            max-width: 350px; /* 設定一個最大寬度 */
         }
         .hiragana-list-section {
             flex: 1.2; /* 放大1.2倍 */
@@ -74,8 +53,6 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             padding: 1em;
             text-align: center;
-            width: 100%; /* 確保寬度為100% */
-            max-width: 400px; /* 設定一個最大寬度 */
         }
         .section img {
             max-width: 100%;
@@ -90,11 +67,6 @@
             display: grid;
             grid-template-columns: repeat(7, 1fr); /* 每行最多七個字 */
             gap: 0.2em; /* 縮小按鍵間隔 */
-        }
-        @media (max-width: 768px) {
-            .hiragana-list {
-                grid-template-columns: repeat(4, 1fr); /* 小屏幕上每行最多四個字 */
-            }
         }
         .hiragana-list button {
             width: 100%;
@@ -115,8 +87,8 @@
         }
         /* 平假名圖片播放鍵 */
         .image-play-button {
-            width: 5rem; /* 使用相對單位 */
-            height: 5rem; /* 使用相對單位 */
+            width: 80px;
+            height: 80px;
             padding: 0;
             background: none;
             border: none;
@@ -127,8 +99,8 @@
         }
         /* 平假名筆劃GIF播放鍵 */
         .gif-play-button {
-            width: 5.625rem; /* 使用相對單位 */
-            height: 5.625rem; /* 使用相對單位 */
+            width: 90px;
+            height: 90px;
             padding: 0;
             background: none;
             border: none;
@@ -139,8 +111,8 @@
         }
         /* 平假名聯想圖片播放鍵 */
         .mnemonic-play-button {
-            width: 6.25rem; /* 使用相對單位 */
-            height: 6.25rem; /* 使用相對單位 */
+            width: 100px;
+            height: 100px;
             padding: 0;
             background: none;
             border: none;
@@ -361,7 +333,7 @@
 
         function playMnemonic() {
             if (currentHiragana === '') return;
-            const mnemonic = `assets/${currentHiragana}-mnemonic.png`;
+            const mnemonic = `assets/${hiragana}-mnemonic.png`;
             document.getElementById('mnemonic-image').src = mnemonic;
             const sound = document.getElementById('mnemonic-sound');
             sound.currentTime = 0;
