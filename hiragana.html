@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>平假名學習軟體</title>
     <style>
+        html {
+            font-size: 16px; /* 預設字體大小 */
+        }
+        @media (max-width: 768px) {
+            html {
+                font-size: 14px; /* 小屏幕字體大小 */
+            }
+        }
+        @media (max-width: 480px) {
+            html {
+                font-size: 12px; /* 更小屏幕字體大小 */
+            }
+        }
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -87,8 +100,8 @@
         }
         /* 平假名圖片播放鍵 */
         .image-play-button {
-            width: 80px;
-            height: 80px;
+            width: 5rem; /* 使用相對單位 */
+            height: 5rem; /* 使用相對單位 */
             padding: 0;
             background: none;
             border: none;
@@ -99,8 +112,8 @@
         }
         /* 平假名筆劃GIF播放鍵 */
         .gif-play-button {
-            width: 90px;
-            height: 90px;
+            width: 5.625rem; /* 使用相對單位 */
+            height: 5.625rem; /* 使用相對單位 */
             padding: 0;
             background: none;
             border: none;
@@ -111,8 +124,8 @@
         }
         /* 平假名聯想圖片播放鍵 */
         .mnemonic-play-button {
-            width: 100px;
-            height: 100px;
+            width: 6.25rem; /* 使用相對單位 */
+            height: 6.25rem; /* 使用相對單位 */
             padding: 0;
             background: none;
             border: none;
@@ -333,7 +346,7 @@
 
         function playMnemonic() {
             if (currentHiragana === '') return;
-            const mnemonic = `assets/${currentHiragana}-mnemonic.png`;
+            const mnemonic = `assets/${hiragana}-mnemonic.png`;
             document.getElementById('mnemonic-image').src = mnemonic;
             const sound = document.getElementById('mnemonic-sound');
             sound.currentTime = 0;
