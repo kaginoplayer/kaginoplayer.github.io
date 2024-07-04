@@ -141,18 +141,10 @@
             cursor: pointer;
             border-radius: 8px; /* 圓角 */
             font-size: 1.2em; /* 調整字體大小 */
-            transition: background-color 0.3s, transform 0.1s ease;
             position: absolute; /* 絕對定位 */
             top: calc(50% + 100px); /* 與其他播放鍵對齊 */
             left: 50%;
             transform: translateX(-50%);
-        }
-        .start-button:hover {
-            background-color: #ffdb4d; /* 滑鼠移上時的顏色 */
-        }
-        .start-button:active {
-            background-color: #ffcc00; /* 按下時的顏色 */
-            transform: scale(0.95); /* 按下時的縮小效果 */
         }
     </style>
 </head>
@@ -192,7 +184,8 @@
             </div>
             <!-- 新增的開始學習按鈕 -->
             <a href="hiragana.html">
-            <button class="start-button button-press-effect" onclick="startLearning()">開始正式學習</button>
+                <button class="start-button">開始正式學習</button>
+            </a>
         </div>
     </main>
     <footer>
@@ -258,10 +251,6 @@
             const sound = document.getElementById('mnemonic-sound');
             sound.currentTime = 0;
             sound.play();
-        }
-
-        function startLearning() {
-            alert('開始學習平假名！');
         }
     </script>
 </body>
