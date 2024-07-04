@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>教學頁</title>
+    <title>教學</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -32,39 +32,30 @@
         }
         main {
             display: flex;
-            flex-direction: row;
-            flex-wrap: wrap; /* 允許內容換行 */
             width: 90%;
             max-width: 1200px;
             margin: 1em 0;
             gap: 0.5em;
         }
         .section {
-            flex: 1 1 100%; /* 在小屏幕上每個區塊佔據一行 */
+            flex: 1;
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             padding: 1em;
             text-align: center;
-            box-sizing: border-box; /* 確保內部和邊框計算 */
         }
         .hiragana-list-section {
-            flex: 1.2 1 100%; /* 在小屏幕上每個區塊佔據一行 */
+            flex: 1.2; /* 放大1.2倍 */
             background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             padding: 1em;
             text-align: center;
             position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-sizing: border-box; /* 確保內部和邊框計算 */
         }
         .section img {
             max-width: 100%;
-            height: auto; /* 保持圖片比例 */
         }
         .section button, .hiragana-list-section button {
             margin-top: 1em;
@@ -73,15 +64,14 @@
             cursor: pointer;
         }
         .hiragana-list {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.2em;
+            display: grid;
+            grid-template-columns: repeat(1, 1fr); /* 確保每行一個字 */
+            gap: 0.2em; /* 縮小按鍵間隔 */
+            justify-items: center; /* 水平居中 */
         }
         .hiragana-list button {
-            width: 60px;
-            height: 60px;
+            width: 60px; /* 固定寬度 */
+            height: 60px; /* 固定高度 */
             font-size: 1.5em;
             cursor: pointer;
             box-sizing: border-box;
@@ -90,21 +80,48 @@
             transition: background-color 0.3s;
         }
         .hiragana-list button.clicked {
-            background-color: #d0d0d0;
+            background-color: #d0d0d0; /* 更明顯的顏色變化 */
         }
         .hiragana-list .empty {
-            visibility: hidden;
+            visibility: hidden; /* 隱藏但保留空間 */
         }
-        .image-play-button, .gif-play-button, .mnemonic-play-button {
-            width: 80px;
-            height: 80px;
-            padding: 0;
-            background: none;
-            border: none;
+        /* 平假名圖片播放鍵 */
+        .image-play-button {
+            width: 80px; /* 调整按钮宽度 */
+            height: 80px; /* 调整按钮高度 */
+            padding: 0; /* 移除内边距 */
+            background: none; /* 移除默认背景 */
+            border: none; /* 移除默认边框 */
         }
-        .image-icon, .gif-icon, .mnemonic-icon {
-            width: 100%;
-            height: auto;
+        .image-icon {
+            width: 100%; /* 图片宽度设置为按钮宽度的100% */
+            height: auto; /* 自动调整高度以保持比例 */
+        }
+
+        /* 平假名筆劃GIF播放鍵 */
+        .gif-play-button {
+            width: 90px; /* 调整按钮宽度 */
+            height: 90px; /* 调整按钮高度 */
+            padding: 0; /* 移除内边距 */
+            background: none; /* 移除默认背景 */
+            border: none; /* 移除默认边框 */
+        }
+        .gif-icon {
+            width: 100%; /* 图片宽度设置为按钮宽度的100% */
+            height: auto; /* 自动调整高度以保持比例 */
+        }
+
+        /* 平假名聯想圖片播放鍵 */
+        .mnemonic-play-button {
+            width: 100px; /* 调整按钮宽度 */
+            height: 100px; /* 调整按钮高度 */
+            padding: 0; /* 移除内边距 */
+            background: none; /* 移除默认背景 */
+            border: none; /* 移除默认边框 */
+        }
+        .mnemonic-icon {
+            width: 100%; /* 图片宽度设置为按钮宽度的100% */
+            height: auto; /* 自动调整高度以保持比例 */
         }
         .disabled {
             cursor: not-allowed;
@@ -115,24 +132,19 @@
             transition: transform 0.1s;
         }
         .start-button {
-            width: 150px;
-            height: 50px;
+            width: 150px; /* 增加寬度 */
+            height: 50px; /* 增加高度 */
             padding: 0;
-            background: #ffcc00;
-            border: 2px solid #cc9900;
-            color: #333;
+            background: #ffcc00; /* 背景色變為黃色 */
+            border: 2px solid #cc9900; /* 邊框色變為深黃色 */
+            color: #333; /* 字體顏色變為深色 */
             cursor: pointer;
-            border-radius: 8px;
-            font-size: 1.2em;
-            margin-top: 1em; /* 與其他內容保持間隔 */
-        }
-        @media (min-width: 768px) {
-            main {
-                flex-direction: row;
-            }
-            .section, .hiragana-list-section {
-                flex: 1; /* 在大屏幕上各個區塊平分佈局 */
-            }
+            border-radius: 8px; /* 圓角 */
+            font-size: 1.2em; /* 調整字體大小 */
+            position: absolute; /* 絕對定位 */
+            top: calc(50% + 100px); /* 與其他播放鍵對齊 */
+            left: 50%;
+            transform: translateX(-50%);
         }
     </style>
 </head>
@@ -167,8 +179,10 @@
         <div class="hiragana-list-section">
             <h2>①點選字母</h2>
             <div class="hiragana-list">
+                <!-- 只保留の鍵 -->
                 <button onclick="updateContent('no')">の</button>
             </div>
+            <!-- 新增的開始學習按鈕 -->
             <a href="hiragana.html">
                 <button class="start-button">開始正式學習</button>
             </a>
@@ -188,14 +202,14 @@
 
         function updateContent(hiragana) {
             currentHiragana = hiragana;
-            document.getElementById('hiragana-image').src = `assets/${hiragana}-image.png`;
-            document.getElementById('hiragana-sound').src = `assets/${hiragana}-ex.wav`;
-            document.getElementById('stroke-order-gif').src = `assets/blank.png`;
-            document.getElementById('mnemonic-image').src = `assets/blank.png`;
-            document.getElementById('mnemonic-sound').src = `assets/${hiragana}-mnemonic.mp3`;
+            document.getElementById('hiragana-image').src = assets/${hiragana}-image.png;
+            document.getElementById('hiragana-sound').src = assets/${hiragana}-ex.wav;
+            document.getElementById('stroke-order-gif').src = assets/blank.png;
+            document.getElementById('mnemonic-image').src = assets/blank.png;
+            document.getElementById('mnemonic-sound').src = assets/${hiragana}-mnemonic.mp3;
 
             // 設定被點擊的按鍵樣式
-            document.querySelector(`.hiragana-list button[onclick="updateContent('${hiragana}')"]`).classList.add('clicked');
+            document.querySelector(.hiragana-list button[onclick="updateContent('${hiragana}')"]).classList.add('clicked');
             
             // 啟用播放鍵
             document.getElementById('imagePlayButton').classList.remove('disabled');
@@ -219,7 +233,7 @@
 
         function playGif() {
             if (currentHiragana === '') return;
-            const gif = `assets/${currentHiragana}-gif.gif`;
+            const gif = assets/${currentHiragana}-gif.gif;
             const img = document.getElementById('stroke-order-gif');
             img.src = gif;
             const duration = gifDurations[currentHiragana] || 3000; // 默認為 3 秒
@@ -227,12 +241,12 @@
         }
 
         function handleGifEnd() {
-            document.getElementById('stroke-order-gif').src = `assets/${currentHiragana}-image.png`;
+            document.getElementById('stroke-order-gif').src = assets/${currentHiragana}-image.png;
         }
 
         function playMnemonic() {
             if (currentHiragana === '') return;
-            const mnemonic = `assets/${currentHiragana}-mnemonic.png`;
+            const mnemonic = assets/${currentHiragana}-mnemonic.png;
             document.getElementById('mnemonic-image').src = mnemonic;
             const sound = document.getElementById('mnemonic-sound');
             sound.currentTime = 0;
