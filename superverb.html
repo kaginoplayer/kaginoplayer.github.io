@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JVerb Reciter</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            color: #333;
+            padding: 20px;
+            position: relative;
+            min-height: 100vh;
+        }
+        #container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            padding: 30px;
+            margin-top: 50px;
+            position: relative;
+            width: 80%;
+            max-width: 600px;
+        }
+        #display-area {
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        #japanese-character {
+            font-size: 2.5em;
+            margin: 20px 0;
+            min-height: 1.5em;
+            transition: transform 0.3s;
+            color: #333;
+        }
+        .known {
+            color: gray;
+        }
+        #hiragana-pronunciation {
+            font-size: 1.8em;
+            margin: 20px 0;
+            min-height: 1.5em;
+            transition: transform 0.3s;
+            color: red;
+        }
+        #control-panel {
+            margin: 20px 0;
+        }
+        #start-button, #next-button, #auto-button {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: #fff;
+            transition: background-color 0.3s, transform 0.3s;
+            min-width: 100px;
+        }
+        #start-button:hover, #next-button:hover, #auto-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        #start-button:disabled, #next-button:disabled, #auto-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        input[type="number"], input[type="file"] {
+            margin: 10px 0;
+            padding: 5px;
+            font-size: 1em;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        input[type="file"]:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        label {
+            font-size: 1em;
+            margin-right: 10px;
+        }
+        #download-button {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 5px 10px;
+            font-size: 0.9em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: #fff;
+            transition: background-color 0.3s, transform 0.3s;
+            text-decoration: none;
+        }
+        #download-button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+        #reset-button {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            padding: 5px 10px;
+            font-size: 0.9em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #dc3545;
+            color: #fff;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        #reset-button:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+        #counter {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="display-area">
+            <div id="japanese-character"></div>
+            <div id="hiragana-pronunciation"></div>
+            <label>
+                <input type="checkbox" id="known-checkbox"> 已知
+            </label>
+        </div>
+        <div id="control-panel">
+            <label for="delay-input">標音延遲秒數: </label>
+            <input type="number" id="delay-input" value="3" min="1" max="10">
+            <button id="next-button" disabled>下一個</button>
+            <br>
+            <label for="next-delay-input">換字間隔秒數: </label>
+            <input type="number" id="next-delay-input" value="2" min="1" max="10">
+            <button id="auto-button" disabled>全自動</button>
+            <br>
+            <input type="file" id="file-input" accept=".xlsx">
+        </div>
+        <button id="start-button" disabled>開始</button>
+        <div id="counter">已標記 0 字，共 0 字</div>
+        <button id="export-button">匯出未標記單字</button>
+        <a id="download-button" href="example.xlsx" download>下載範例資料庫</a>
+        <button id="reset-button" disabled>重置標記</button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+    <script>
+        let words = [];
+        let usedWords = [];
+        let appearedWords = [];
+        let counter = 0;
+        let totalWordsCount = 0; // 總字數變量
+
+        const fileInput = document.getElementById('file-input');
+        const startButton = document.getElementById('start-button');
+        const nextButton = document.getElementById('next-button');
+        const autoButton = document.getElementById('auto-button');
+        const resetButton = document.getElementById('reset-button');
+        const japaneseCharacterDiv = document.getElementById('japanese-character');
+        const hiraganaPronunciationDiv = document.getElementById('hiragana-pronunciation');
+        const delayInput = document.getElementById('delay-input');
+        const nextDelayInput = document.getElementById('next-delay-input');
+        const counterDiv = document.getElementById('counter');
+        const knownCheckbox = document.getElementById('known-checkbox');
+        const exportButton = document.getElementById('export-button');
+
+        const knownWordsKey = 'knownWords';
+        let knownWords = JSON.parse(localStorage.getItem(knownWordsKey)) || [];
+        let autoIntervalId;
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+                words = jsonData.slice(1).map(row => ({
+                    kanji: row[0],
+                    hiragana: row[1]
+                }));
+
+                totalWordsCount = words.length; // 設置總字數
+                if (words.length > 0) {
+                    startButton.disabled = false;
+                    nextButton.disabled = false;
+                    autoButton.disabled = false;
+                    resetButton.disabled = false;
+                }
+                updateCounter(); // 更新總數
+            };
+
+            reader.readAsArrayBuffer(file);
+        });
+
+        function startLearning() {
+            startButton.textContent = '結束';
+            fileInput.disabled = true;
+            usedWords = [];
+            appearedWords = [];
+            counter = 0;
+            updateCounter();
+            displayRandomWord();
+        }
+
+        function stopLearning() {
+            startButton.textContent = '開始';
+            fileInput.disabled = false;
+            clearInterval(autoIntervalId);
+            japaneseCharacterDiv.textContent = '';
+            hiraganaPronunciationDiv.textContent = '';
+        }
+
+        function displayRandomWord() {
+            if (usedWords.length === words.length) {
+                alert('所有單字已展示完畢');
+                stopLearning();
+                return;
+            }
+
+            const unknownWords = words.filter(word => !knownWords.includes(word.kanji));
+
+            let randomIndex;
+            let randomWord;
+
+            do {
+                randomIndex = Math.floor(Math.random() * unknownWords.length);
+                randomWord = unknownWords[randomIndex];
+            } while (usedWords.includes(randomWord.kanji));
+
+            usedWords.push(randomWord.kanji);
+            japaneseCharacterDiv.textContent = randomWord.kanji;
+            hiraganaPronunciationDiv.textContent = '';
+
+            knownCheckbox.checked = false;
+
+            setTimeout(() => {
+                hiraganaPronunciationDiv.textContent = randomWord.hiragana;
+            }, delayInput.value * 1000);
+
+            knownCheckbox.addEventListener('change', () => {
+                if (knownCheckbox.checked) {
+                    if (!knownWords.includes(randomWord.kanji)) {
+                        knownWords.push(randomWord.kanji);
+                        localStorage.setItem(knownWordsKey, JSON.stringify(knownWords));
+                        counter++;
+                        updateCounter();
+                    }
+                }
+            });
+        }
+
+        function updateCounter() {
+            counterDiv.textContent = `已標記 ${counter} 字，共 ${totalWordsCount} 字`;
+        }
+
+        startButton.addEventListener('click', () => {
+            if (startButton.textContent === '開始') {
+                startLearning();
+            } else {
+                stopLearning();
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            displayRandomWord();
+        });
+
+        autoButton.addEventListener('click', () => {
+            clearInterval(autoIntervalId);
+            autoIntervalId = setInterval(displayRandomWord, nextDelayInput.value * 1000);
+        });
+
+        resetButton.addEventListener('click', () => {
+            localStorage.removeItem(knownWordsKey);
+            knownWords = [];
+            counter = 0;
+            updateCounter();
+            alert('標記已重置');
+        });
+
+        function exportUnknownWords() {
+            const unknownWords = words.filter(word => !knownWords.includes(word.kanji));
+            let csvContent = "\uFEFF";  // 加入 BOM
+
+            unknownWords.forEach(word => {
+                const row = `${word.kanji},${word.hiragana}\n`;
+                csvContent += row;
+            });
+
+            const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "unknown_words.csv");
+            document.body.appendChild(link); // Required for FF
+
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        exportButton.addEventListener('click', exportUnknownWords);
+    </script>
+</body>
+</html>
