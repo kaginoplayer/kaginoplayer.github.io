@@ -75,7 +75,7 @@
           const headers = data[0];
           let headerRow = '<tr>';
           headers.forEach(cell => {
-            headerRow += <th>${cell}</th>;
+            headerRow += `<th>${cell}</th>`;
           });
           headerRow += '</tr>';
           thead.innerHTML = headerRow;
@@ -83,7 +83,7 @@
           for (let i = 1; i < data.length; i++) {
             let row = '<tr>';
             data[i].forEach(cell => {
-              row += <td>${cell}</td>;
+              row += `<td>${cell}</td>`;
             });
             row += '</tr>';
             tbody.innerHTML += row;
@@ -92,7 +92,7 @@
           tbody.innerHTML = '<tr><td colspan="3">無資料</td></tr>';
         }
       } catch (error) {
-        document.getElementById("table-body").innerHTML = <tr><td colspan="3">載入失敗：${error}</td></tr>;
+        document.getElementById("table-body").innerHTML = `<tr><td colspan="3">載入失敗：${error}</td></tr>`;
       }
     }
 
