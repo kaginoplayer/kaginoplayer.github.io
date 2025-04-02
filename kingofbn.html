@@ -95,3 +95,9 @@
         document.getElementById("table-body").innerHTML = <tr><td colspan="3">載入失敗：${error}</td></tr>;
       }
     }
+
+    loadSheetData();
+    setInterval(loadSheetData, 30000);
+  </script>
+</body>
+</html>
