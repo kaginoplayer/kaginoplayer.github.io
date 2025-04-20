@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>圖片驗證系統</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #f4f4f4;
+      padding: 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    .grid img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      cursor: pointer;
+      border: 4px solid transparent;
+      border-radius: 8px;
+      transition: border 0.2s;
+    }
+    .grid img.selected {
+      border-color: #00aaff;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+    }
+    #result {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<h2>請點選所有包含C CUP的圖片</h2>
+
+<div class="grid" id="imageGrid"></div>
+
+<button onclick="checkAnswers()">提交驗證</button>
+
+<div id="result"></div>
+
+<script>
+  // 假資料（實際上可用你自己的圖片）
+  const images = [
+    { src: "https://img.ltn.com.tw/Upload/ent/page/800/2023/10/15/phpWuJB8j.jpg", isCat: true },
+    { src: "https://images.chinatimes.com/newsphoto/2024-12-25/656/20241225004431.jpg", isCat: false },
+    { src: "https://d1b8dyiuti31bx.cloudfront.net/NewsPhotos/20240903/157_145129338771.png", isCat: true },
+    { src: "https://img.ltn.com.tw/Upload/news/600/2017/07/31/phpNk0iq2.jpg", isCat: true },
+    { src: "https://static.popdaily.com.tw/wp-content/uploads/2024/04/7fnz9edpp1k4ksco0ggwcw48ssfoz1b-750x1000.jpeg", isCat: false },
+    { src: "https://image1.gamme.com.tw/news2/2021/37/31/pZiao6SVlqWVrA.jpg", isCat: false },
+    { src: "https://news.beautywiki.com.tw/wp-content/uploads/2023/07/4731b12f9509e74253f5752b4284783a5538be5c.jpg", isCat: true },
+    { src: "https://d1b8dyiuti31bx.cloudfront.net/NewsPhotos/20231211/122_080741749944.jpg", isCat: true },
+    { src: "https://cdn2.ettoday.net/images/4252/d4252993.jpg", isCat: false },
+  ];
+
+  const grid = document.getElementById("imageGrid");
+
+  images.forEach((img, i) => {
+    const el = document.createElement("img");
+    el.src = img.src;
+    el.dataset.index = i;
+    el.onclick = () => el.classList.toggle("selected");
+    grid.appendChild(el);
+  });
+
+  function checkAnswers() {
+    const selectedIndexes = [...document.querySelectorAll('.grid img.selected')]
+      .map(img => parseInt(img.dataset.index));
+    const correctIndexes = images
+      .map((img, i) => img.isCat ? i : null)
+      .filter(i => i !== null);
+
+    const isCorrect = selectedIndexes.length === correctIndexes.length &&
+                      selectedIndexes.every(i => correctIndexes.includes(i));
+
+    const result = document.getElementById("result");
+    result.style.color = isCorrect ? "green" : "red";
+    result.textContent = isCorrect ? "驗證成功！你是人類！" : "驗證失敗，請再試一次。";
+  }
+</script>
+
+</body>
+</html>
