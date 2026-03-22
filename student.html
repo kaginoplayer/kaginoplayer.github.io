@@ -2,23 +2,80 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>抽籤系統</title>
+
+<style>
+body {
+  font-family: sans-serif;
+  background: #f4f6f8;
+  padding: 20px;
+  text-align: center;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+h2 {
+  margin-bottom: 20px;
+}
+
+input, select {
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  font-size: 16px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+  background: #4CAF50;
+  color: white;
+}
+
+#msg {
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.result {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 12px;
+  background: #eef5ff;
+}
+</style>
 </head>
+
 <body>
 
-<h2>報告題目抽籤</h2>
+<div class="card">
+  <h2>🎯 題目抽籤</h2>
 
-<input id="name" placeholder="姓名"><br><br>
+  <input id="name" placeholder="請輸入姓名">
 
-<select id="topic">
-  <option value="A">題目A</option>
-  <option value="B">題目B</option>
-</select><br><br>
+  <select id="topic">
+    <option value="A">題目 A</option>
+    <option value="B">題目 B</option>
+  </select>
 
-<button onclick="submitData()">送出</button>
+  <button onclick="submitData()">送出</button>
 
-<p id="msg"></p>
-<p id="info"></p>
+  <p id="msg"></p>
+  <div id="info" class="result"></div>
+</div>
 
 <script>
 const API = "https://script.google.com/macros/s/AKfycbxRRvvLnMt-rDzlPIgEJc678p7D18XoxdzjBhvqIy6CO3-mXPqKDpUPSLYa2P6fH0mj/exec";
@@ -33,35 +90,45 @@ function getDeviceId() {
 }
 
 function submitData() {
+  const name = document.getElementById("name").value;
+  const topic = document.getElementById("topic").value;
+
+  if (!name) {
+    msg("請輸入姓名");
+    return;
+  }
+
   fetch(API, {
     method: "POST",
     body: JSON.stringify({
-      name: document.getElementById("name").value,
-      topic: document.getElementById("topic").value,
+      name: name,
+      topic: topic,
       deviceId: getDeviceId()
     })
   })
   .then(res => res.text())
   .then(res => {
-    if (res === "duplicate") msg("你已填過");
-    else if (res === "locked") msg("已開獎，無法填寫");
-    else msg("送出成功！");
+    if (res === "duplicate") msg("⚠️ 已填過");
+    else if (res === "locked") msg("🔒 已開獎");
+    else msg("✅ 送出成功！");
   });
 }
 
-function msg(t){document.getElementById("msg").innerText=t;}
+function msg(t){
+  document.getElementById("msg").innerText = t;
+}
 
 function refresh() {
   fetch(API)
     .then(res => res.json())
     .then(data => {
       if (data.status === "waiting") {
-        document.getElementById("info").innerText =
-          "目前人數：" + JSON.stringify(data.count);
+        document.getElementById("info").innerHTML =
+          "👥 人數：" + JSON.stringify(data.count);
       } else {
-        let html = "<h3>🎉 開獎結果</h3>";
+        let html = "<h3>🎉 結果</h3>";
         data.result.forEach(r=>{
-          html += `題目${r[0]}：<br>✅ ${r[1]}<br>❌ ${r[2]}<br><br>`;
+          html += `<b>題目 ${r[0]}</b><br>👑 ${r[1]}<br>😭 ${r[2]}<br><br>`;
         });
         document.getElementById("info").innerHTML = html;
       }
