@@ -2,18 +2,71 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>老師後台</title>
+
+<style>
+body {
+  font-family: sans-serif;
+  background: #222;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.card {
+  background: #333;
+  padding: 20px;
+  border-radius: 16px;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  font-size: 18px;
+  border: none;
+  border-radius: 12px;
+}
+
+.draw {
+  background: gold;
+  color: black;
+}
+
+.reset {
+  background: crimson;
+  color: white;
+}
+
+#msg {
+  margin-top: 15px;
+}
+</style>
 </head>
+
 <body>
 
-<h2>🧑‍🏫 控制台</h2>
+<div class="card">
+  <h2>🧑‍🏫 控制台</h2>
 
-<input type="password" id="pwd" placeholder="密碼"><br><br>
+  <input type="password" id="pwd" placeholder="密碼">
 
-<button onclick="draw()">🎰 開獎</button>
-<button onclick="reset()">♻️ 重置</button>
+  <button class="draw" onclick="draw()">🎰 開獎</button>
+  <button class="reset" onclick="reset()">♻️ 重置</button>
 
-<p id="msg"></p>
+  <p id="msg"></p>
+</div>
 
 <script>
 const API = "https://script.google.com/macros/s/AKfycbxRRvvLnMt-rDzlPIgEJc678p7D18XoxdzjBhvqIy6CO3-mXPqKDpUPSLYa2P6fH0mj/exec";
@@ -28,15 +81,15 @@ function draw() {
   })
   .then(res => res.text())
   .then(res => {
-    if (res === "wrong_pwd") msg("密碼錯誤");
-    else if (res === "already_drawn") msg("已經抽過");
-    else msg("🎉 開獎完成！");
+    if (res === "wrong_pwd") msg("❌ 密碼錯");
+    else if (res === "already_drawn") msg("⚠️ 已抽過");
+    else msg("🎉 開獎成功！");
   });
 }
 
 function reset() {
   if (!confirm("⚠️ 確定重置？")) return;
-  if (!confirm("🔥 真的要清空所有結果？")) return;
+  if (!confirm("🔥 所有結果會清空！")) return;
 
   fetch(API, {
     method: "POST",
@@ -46,8 +99,8 @@ function reset() {
     })
   })
   .then(res => res.text())
-  .then(res => {
-    msg("♻️ 已重置！");
+  .then(() => {
+    msg("♻️ 已重置");
   });
 }
 
