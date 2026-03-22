@@ -19,6 +19,8 @@ body {
   padding: 20px;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  max-width: 400px;
+  margin: auto;
 }
 
 h2 {
@@ -32,6 +34,7 @@ input, select {
   font-size: 16px;
   border-radius: 10px;
   border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 button {
@@ -45,6 +48,10 @@ button {
   color: white;
 }
 
+button:active {
+  transform: scale(0.98);
+}
+
 #msg {
   margin-top: 15px;
   font-weight: bold;
@@ -55,6 +62,13 @@ button {
   padding: 15px;
   border-radius: 12px;
   background: #eef5ff;
+  text-align: left;
+}
+
+.topic {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
 }
 </style>
 </head>
@@ -74,11 +88,12 @@ button {
   <button onclick="submitData()">送出</button>
 
   <p id="msg"></p>
+
   <div id="info" class="result"></div>
 </div>
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbxRRvvLnMt-rDzlPIgEJc678p7D18XoxdzjBhvqIy6CO3-mXPqKDpUPSLYa2P6fH0mj/exec";
+const API = "👉貼你的API網址";
 
 function getDeviceId() {
   let id = localStorage.getItem("deviceId");
@@ -90,11 +105,11 @@ function getDeviceId() {
 }
 
 function submitData() {
-  const name = document.getElementById("name").value;
+  const name = document.getElementById("name").value.trim();
   const topic = document.getElementById("topic").value;
 
   if (!name) {
-    msg("請輸入姓名");
+    msg("⚠️ 請輸入姓名");
     return;
   }
 
@@ -108,7 +123,7 @@ function submitData() {
   })
   .then(res => res.text())
   .then(res => {
-    if (res === "duplicate") msg("⚠️ 已填過");
+    if (res === "duplicate") msg("⚠️ 你已填過");
     else if (res === "locked") msg("🔒 已開獎");
     else msg("✅ 送出成功！");
   });
@@ -122,14 +137,36 @@ function refresh() {
   fetch(API)
     .then(res => res.json())
     .then(data => {
+
+      // 🟢 尚未開獎 → 顯示「已填人數」
       if (data.status === "waiting") {
-        document.getElementById("info").innerHTML =
-          "👥 人數：" + JSON.stringify(data.count);
-      } else {
-        let html = "<h3>🎉 結果</h3>";
-        data.result.forEach(r=>{
-          html += `<b>題目 ${r[0]}</b><br>👑 ${r[1]}<br>😭 ${r[2]}<br><br>`;
+
+        let html = "<h3>👥 已填人數</h3>";
+
+        const topics = ["A", "B"];
+
+        topics.forEach(t => {
+          const num = data.count[t] || 0;
+          html += `題目 ${t}：${num} 人<br>`;
         });
+
+        document.getElementById("info").innerHTML = html;
+      }
+
+      // 🎉 已開獎 → 顯示結果
+      else {
+        let html = "<h3>🎉 抽籤結果</h3>";
+
+        data.result.forEach(r=>{
+          html += `
+            <div class="topic">
+              <b>題目 ${r[0]}</b><br>
+              👑 中籤：${r[1]}<br>
+              😭 未中：${r[2] || "—"}
+            </div>
+          `;
+        });
+
         document.getElementById("info").innerHTML = html;
       }
     });
