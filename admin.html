@@ -3,82 +3,56 @@
 <head>
 <meta charset="UTF-8">
 <title>老師後台</title>
-
-<style>
-body {
-  font-family: Arial;
-  text-align: center;
-  background: linear-gradient(135deg, #0f2027, #2c5364);
-  color: white;
-}
-
-.card {
-  margin: 20px auto;
-  padding: 20px;
-  width: 300px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 12px;
-}
-
-button {
-  padding: 12px 20px;
-  margin: 10px;
-  font-size: 18px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-#drawBtn {
-  background: #ffcc00;
-  color: black;
-}
-
-#status {
-  margin-top: 20px;
-}
-</style>
-
 </head>
-
 <body>
 
-<h1>🧑‍🏫 老師控制台</h1>
+<h2>🧑‍🏫 控制台</h2>
 
-<div class="card">
-  <input type="password" id="pwd" placeholder="輸入密碼"><br><br>
-  <button id="drawBtn" onclick="draw()">🎰 開獎</button>
-</div>
+<input type="password" id="pwd" placeholder="密碼"><br><br>
 
-<div id="status"></div>
+<button onclick="draw()">🎰 開獎</button>
+<button onclick="reset()">♻️ 重置</button>
+
+<p id="msg"></p>
 
 <script>
 const API = "https://script.google.com/macros/s/AKfycbxRRvvLnMt-rDzlPIgEJc678p7D18XoxdzjBhvqIy6CO3-mXPqKDpUPSLYa2P6fH0mj/exec";
 
 function draw() {
-  const pwd = document.getElementById("pwd").value;
-
   fetch(API, {
     method: "POST",
     body: JSON.stringify({
       action: "draw",
-      password: pwd
+      password: document.getElementById("pwd").value
     })
   })
   .then(res => res.text())
   .then(res => {
-    if (res === "wrong_pwd") {
-      msg("❌ 密碼錯誤");
-    } else if (res === "already_drawn") {
-      msg("⚠️ 已經開獎過了");
-    } else if (res === "success") {
-      msg("🎉 開獎完成！");
-    }
+    if (res === "wrong_pwd") msg("密碼錯誤");
+    else if (res === "already_drawn") msg("已經抽過");
+    else msg("🎉 開獎完成！");
   });
 }
 
-function msg(t) {
-  document.getElementById("status").innerText = t;
+function reset() {
+  if (!confirm("⚠️ 確定重置？")) return;
+  if (!confirm("🔥 真的要清空所有結果？")) return;
+
+  fetch(API, {
+    method: "POST",
+    body: JSON.stringify({
+      action: "reset",
+      password: document.getElementById("pwd").value
+    })
+  })
+  .then(res => res.text())
+  .then(res => {
+    msg("♻️ 已重置！");
+  });
+}
+
+function msg(t){
+  document.getElementById("msg").innerText = t;
 }
 </script>
 
