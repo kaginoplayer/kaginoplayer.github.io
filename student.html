@@ -78,7 +78,7 @@ button:active {
 <div class="card">
   <h2>🎯 題目抽籤</h2>
 
-  <input id="name" placeholder="請輸入學號後兩碼">
+  <input id="name" placeholder="請輸入學號後2碼">
 
   <select id="topic">
     <option value="A">LoiLoNote平台輔助國小「數形規律｣教學對學生學習成效與動機之影響</option>
@@ -109,7 +109,7 @@ function submitData() {
   const topic = document.getElementById("topic").value;
 
   if (!name) {
-    msg("⚠️ 請輸入姓名");
+    msg("⚠️ 請輸入學號後2碼");
     return;
   }
 
